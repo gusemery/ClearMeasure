@@ -43,6 +43,7 @@ namespace FizzBuzzLib
                 throw new IndexOutOfRangeException("The passed variables are not within spec. The start has to be > 0 and finish has to be greater than Start and != 0. And there cannot be a Case of 0 ");
 
             List<string> result = new List<string>();
+
             for (var x = start; x <= finish; x++)
             {
                 var buffer = x.ToString();

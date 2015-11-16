@@ -4,33 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using FizzBuzzLib;
 
 namespace TestProject
 {
     public class FizzBuzzTests
     {
-        Dictionary<int, string> Cases;
+        IFizzBuzzCases Cases;
 
         [TestFixtureSetUp]
         public void TestingSetup()
         {
-            Cases = new Dictionary<int, string>();
-            Cases.Add(2, "Two");
-            Cases.Add(3, "Three");
-            Cases.Add(6, "Bazinga");
+            Cases = GetNormalCases();
         }
 
         [TestFixtureTearDown]
         public void TestingShutdown()
         {
-            Cases.Clear();
+            Cases.Cases.Clear();
             Cases = null;
         }
 
         [TestCase(1, 10)]
         public void TestFizzBuzzForSuccess(int lower, int higher)
         {
-            var result = FizzBuzzLib.FizzBuzz.Process(lower, higher, Cases);
+            var fizzBuzz = new FizzBuzz(Cases);
+            var result = fizzBuzz.Process(lower, higher);
 
             var array = result.ToArray();
             Assert.That(array[0].Contains("Two") == false);
@@ -45,9 +44,12 @@ namespace TestProject
         {
             try
             {
+                var cases = GetNormalCases();
                 //Add div by zero error
-                Cases.Add(0, "Boink");
-                var result = FizzBuzzLib.FizzBuzz.Process(lower, higher, Cases);
+                cases.Cases.Add(new FizzBuzzCase() { Divisor = 0, Message = "Boink" });
+
+                var fizzBuzz = new FizzBuzz(Cases);
+                var result = fizzBuzz.Process(lower, higher);
 
             }
             catch (IndexOutOfRangeException ex )
@@ -60,8 +62,7 @@ namespace TestProject
             }
             finally
             {
-                Cases.Remove(0);
-                
+                TestingSetup();
             }
         }
 
@@ -72,7 +73,8 @@ namespace TestProject
         {
             try
             {
-                var result = FizzBuzzLib.FizzBuzz.Process(lower, higher, Cases);
+                var fizzBuzz = new FizzBuzz(Cases);
+                var result = fizzBuzz.Process(lower, higher);
             }
             catch(IndexOutOfRangeException )
             {
@@ -80,6 +82,16 @@ namespace TestProject
                 return;
             }
             throw new InvalidProgramException("The code should have exited by now!");
+        }
+
+        private IFizzBuzzCases GetNormalCases()
+        {
+            IFizzBuzzCases cases = new FizzBuzzCases();
+            cases.Cases.Clear();
+            cases.Cases.Add(new FizzBuzzCase() { Divisor = 2, Message = "Two" }); 
+            cases.Cases.Add(new FizzBuzzCase() { Divisor = 3, Message = "Three" });
+            cases.Cases.Add(new FizzBuzzCase() { Divisor = 6, Message = "Bazinga" });
+            return cases;
         }
     }
 }

@@ -38,10 +38,6 @@ namespace FizzBuzzLib
         /// <param name="finish">
         ///     End of numbers to test.
         /// </param>
-        /// <param name="Cases">
-        ///     Dictionary<int, string>     int = divisor
-        ///                                 string = Text addition to line.
-        /// </param>
         /// <returns></returns>
         public IList<string> Process(int start, int finish)
         {
